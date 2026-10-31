@@ -80,11 +80,11 @@
         <div class="bread-options">
           <div class="bread-option">
             <label for="breadUnits">Unidades avulsas</label>
-            <div class="inline-add"><input id="breadUnits" type="number" min="1" max="200" value="1"><button class="btn btn-gold" id="addBreadUnits" type="button">Adicionar unidades</button></div>
+            <div class="inline-add"><input id="breadUnits" type="number" min="0" max="20" step="1" value="0" aria-label="Quantidade de unidades avulsas"><button class="btn btn-gold" id="addBreadUnits" type="button">Adicionar unidades</button></div>
           </div>
           <div class="bread-option">
             <label for="breadPortion">Porção</label>
-            <div class="inline-add"><select id="breadPortion"><option value="5">Porção com 5 unidades</option><option value="10">Porção com 10 unidades</option><option value="15">Porção com 15 unidades</option><option value="20">Porção com 20 unidades</option></select><button class="btn btn-gold" id="addBreadPortion" type="button">Adicionar porção</button></div>
+            <div class="inline-add"><select id="breadPortion"><option value="5">5 unidades</option><option value="10">10 unidades</option><option value="15">15 unidades</option><option value="20">20 unidades</option></select><input id="breadPortionCount" type="number" min="0" max="20" step="1" value="0" aria-label="Quantidade de porções"><button class="btn btn-gold" id="addBreadPortion" type="button">Adicionar porção</button></div>
             <small>O valor da porção é calculado pela quantidade de unidades.</small>
           </div>
         </div>
@@ -106,11 +106,11 @@
           <label for="customerName">Seu nome</label>
           <input id="customerName" name="name" autocomplete="name" placeholder="Como podemos chamar você?" required>
           <label for="customerPhone">Seu telefone (opcional)</label>
-          <input id="customerPhone" name="phone" type="tel" autocomplete="tel" placeholder="(21) 99999-9999">
+          <input id="customerPhone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" maxlength="15" placeholder="(21) 99999-9999 ou (21) 9999-9999">
 
           <div class="datetime-fields">
             <div><label for="pickupDate">Dia da retirada</label><input id="pickupDate" type="date" required></div>
-            <div><label for="pickupTime">Horário da retirada</label><input id="pickupTime" type="time" required></div>
+            <div class="time-picker-wrap"><label for="pickupTime">Horário da retirada</label><div class="time-input-row"><input id="pickupTime" type="text" inputmode="numeric" maxlength="5" placeholder="HH:MM" required><button id="openTimePicker" class="text-button" type="button" aria-label="Escolher horário">▾</button></div><div id="timePicker" class="time-picker" hidden><div><label for="pickupHour">Hora</label><select id="pickupHour"></select></div><div><label for="pickupMinute">Minutos</label><select id="pickupMinute"></select></div><button id="applyTime" class="btn btn-gold" type="button">Confirmar horário</button></div></div>
           </div>
 
           <label for="paymentAtPickup">Pagamento</label>
@@ -143,6 +143,7 @@
   </main>
 
   <footer><img src="assets/logo.png" alt="" class="footer-logo"><p>EMPADAS <b>BORGES</b></p><small>Empadas • Pão de Queijo</small><small class="copyright">© <span id="year"></span> Empadas Borges. Todos os direitos reservados.</small></footer>
+  <button id="floatingCart" class="floating-cart" type="button" aria-label="Abrir cestinha e ver total"><span>🧺</span><span id="floatingCartTotal">R$ 0,00</span><small id="floatingCartCount">0 itens</small></button>
   <button id="installBtn" class="install-btn" hidden>＋ Instalar aplicativo</button>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="script.js"></script>
