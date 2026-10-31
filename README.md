@@ -20,8 +20,15 @@ Os sabores e preços são configurados no início de `script.js`, no objeto `EMP
 
 ## WhatsApp
 
-O número de destino dos pedidos é configurado em `WHATSAPP_PEDIDOS`, no início de `script.js`, no formato internacional sem sinais: `5521976409134`.
+O número de destino dos pedidos é configurado em `WHATSAPP_PEDIDOS`, no início de `script.js`, no formato internacional sem sinais: `5521971065848`.
 
 ## Aplicativo (PWA)
 
 O site possui `manifest.json` e `sw.js` para instalação em dispositivos compatíveis, após publicação em HTTPS.
+
+
+## Contato e PIX
+
+- WhatsApp para pedidos: (21) 97106-5848.
+- Chave PIX (telefone): (21) 97106-5848.
+- Instagram: @empadasborges.

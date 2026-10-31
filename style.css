@@ -95,3 +95,14 @@ footer{padding:35px 20px;text-align:center;background:#050403;border-top:1px sol
 .floating-cart{position:fixed;right:18px;bottom:82px;z-index:32;display:grid;grid-template-columns:auto auto;align-items:center;column-gap:9px;padding:11px 15px;border:1px solid var(--gold-light);border-radius:30px;background:linear-gradient(135deg,#f7d77e,#c48b25);color:#170f05;box-shadow:0 6px 24px #0009;cursor:pointer;font-weight:bold}
 .floating-cart>span:first-child{font-size:24px;grid-row:span 2}.floating-cart small{font-size:10px;text-align:left}
 @media(max-width:600px){.inline-add:has(#breadPortionCount){grid-template-columns:1fr 75px}.inline-add:has(#breadPortionCount) button{grid-column:1/-1}.floating-cart{right:12px;bottom:75px}.time-picker{right:0}}
+
+
+/* Contato, Instagram e chave PIX */
+.contact-card{justify-items:center;text-align:center;align-content:center;min-height:190px;gap:9px}
+.contact-icon{height:54px;min-width:54px;display:grid;place-items:center;font-size:37px;font-weight:bold;line-height:1}
+.whatsapp-icon{width:54px;border-radius:50%;background:#20c866;color:#fff;font-size:36px}
+.instagram-icon{width:54px;border-radius:16px;background:linear-gradient(45deg,#ffb13b,#e1306c,#833ab4);color:#fff;font-size:43px}
+.pix-icon{width:58px;height:48px;min-width:58px;border:4px solid #32b9a6;border-radius:12px;color:#32b9a6;font-size:18px;letter-spacing:-1px;transform:rotate(45deg);margin:4px 0 8px}
+.pix-card{cursor:default}
+.contact-card strong{font-size:18px}
+.contact-card small{font-size:13px;text-transform:none;letter-spacing:0}
