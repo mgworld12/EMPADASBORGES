@@ -1,7 +1,7 @@
 /* EMPADAS BORGES — cardápio e pedidos */
 const WHATSAPP_PEDIDOS = "5521971065848";
 const EMPADAS = {
-  grande: {label:"Grande", price:4.50, salgados:["Frango","Frango com requeijão","Camarão","Camarão com requeijão","Queijo","Carne seca"], doces:["Leite condensado","Romeu e Julieta","Beijinho"]},
+  grande: {label:"Grande", price:4.00, salgados:["Frango","Frango com requeijão","Camarão","Camarão com requeijão","Queijo","Carne seca"], doces:["Leite condensado","Romeu e Julieta"]},
   pequena: {label:"Pequena", price:1.00, salgados:["Frango","Frango com requeijão","Camarão"], doces:["Leite condensado","Romeu e Julieta"]}
 };
 const PAO_PRECO = 0.75;
