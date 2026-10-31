@@ -87,7 +87,7 @@ function renderFlavors(){
   const config=EMPADAS[selectedSize];
   const render=(items,kind)=>items.map(name=>{
     const id=`${selectedSize}-${kind}-${slug(name)}`;
-    return `<article class="flavor-item"><div><strong>${esc(name)}</strong><small>${config.label} · ${money(config.price)} cada</small></div><div class="flavor-controls"><div class="stepper"><button class="qty-btn" type="button" data-step="-1" data-target="qty-${id}" aria-label="Diminuir quantidade de ${esc(name)}">−</button><input type="number" min="1" max="${MAX_ADD}" step="1" value="1" inputmode="numeric" aria-label="Quantidade de ${esc(name)}" id="qty-${id}"><button class="qty-btn" type="button" data-step="1" data-target="qty-${id}" aria-label="Aumentar quantidade de ${esc(name)}">+</button></div><button class="btn btn-gold" type="button" data-empada="${id}" data-name="${esc(name)}" data-size="${selectedSize}">Adicionar</button></div></article>`;
+    return `<article class="flavor-item"><div><strong>${esc(name)}</strong><small>${config.label} · ${money(config.price)} cada</small></div><div class="flavor-controls"><div class="stepper"><button class="qty-btn" type="button" data-step="-1" data-target="qty-${id}" aria-label="Diminuir quantidade de ${esc(name)}">−</button><input type="number" min="0" max="${MAX_ADD}" step="1" value="1" inputmode="numeric" aria-label="Quantidade de ${esc(name)}" id="qty-${id}"><button class="qty-btn" type="button" data-step="1" data-target="qty-${id}" aria-label="Aumentar quantidade de ${esc(name)}">+</button></div><button class="btn btn-gold" type="button" data-empada="${id}" data-name="${esc(name)}" data-size="${selectedSize}">Adicionar</button></div></article>`;
   }).join("");
   $("savoryFlavors").innerHTML=render(config.salgados,"salgada");
   $("sweetFlavors").innerHTML=render(config.doces,"doce");
@@ -100,6 +100,7 @@ function renderFlavors(){
 
 /* ---------- Carrinho ---------- */
 function addItem(item, quantity){
+  if(quantity===0){showToast("Aumente a quantidade para adicionar ao pedido.");return false;}
   if(!Number.isInteger(quantity)||quantity<1||quantity>MAX_ADD){showToast(`Informe uma quantidade entre 1 e ${MAX_ADD}.`);return false;}
   const existing=cart.find(i=>i.id===item.id);
   if(existing&&existing.qty+quantity>MAX_ITEM){showToast(`Máximo de ${MAX_ITEM} unidades por item. Para pedidos grandes, fale pelo WhatsApp.`);return false;}
@@ -245,7 +246,7 @@ document.querySelectorAll(".flavor-columns").forEach(container=>container.addEve
   const step=event.target.closest("[data-step]");
   if(step){
     const input=$(step.dataset.target);
-    input.value=Math.min(MAX_ADD,Math.max(1,(Number(input.value)||0)+Number(step.dataset.step)));
+    input.value=Math.min(MAX_ADD,Math.max(0,(Number(input.value)||0)+Number(step.dataset.step)));
     return;
   }
   const button=event.target.closest("[data-empada]");
