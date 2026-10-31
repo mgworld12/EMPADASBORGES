@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080706">
+  <meta name="description" content="Empadas Borges — empadas doces e salgadas e pão de queijo. Faça seu pedido para retirada.">
+  <title>Empadas Borges | Cardápio e pedidos</title>
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/icone-192.png">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#inicio" aria-label="Empadas Borges - início">
+      <img src="assets/logo.png" alt="Logomarca Empadas Borges">
+      <span>EMPADAS <b>BORGES</b></span>
+    </a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">☰</button>
+    <nav id="mainNav">
+      <a href="#cardapio">Cardápio</a>
+      <a href="#pedido">Meu pedido</a>
+      <a href="#retirada">Retirada</a>
+      <a href="#contato">Contato</a>
+    </nav>
+  </header>
+
+  <main id="inicio">
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">SABOR QUE ENCANTA</span>
+        <h1>Feito com carinho.<br><em>Preparado para você.</em></h1>
+        <p>Empadas doces e salgadas e pão de queijo para deixar seu dia mais gostoso.</p>
+        <a class="btn btn-gold" href="#cardapio">Conheça nosso cardápio</a>
+      </div>
+      <div class="hero-mark"><img src="assets/logo.png" alt="Empadas Borges"></div>
+    </section>
+
+    <section class="section" id="cardapio">
+      <div class="section-heading">
+        <span class="eyebrow">ESCOLHA SEUS FAVORITOS</span>
+        <h2>Nosso <em>cardápio</em></h2>
+        <p>Selecione o tamanho, o sabor e a quantidade para adicionar ao pedido.</p>
+      </div>
+      <div class="filters" role="group" aria-label="Filtrar cardápio">
+        <button class="filter active" data-filter="todos">Todos</button>
+        <button class="filter" data-filter="grande">Grandes</button>
+        <button class="filter" data-filter="pequena">Pequenas</button>
+        <button class="filter" data-filter="pao">Pão de queijo</button>
+      </div>
+      <div id="products" class="product-grid"></div>
+    </section>
+
+    <section class="section order-section" id="pedido">
+      <div class="section-heading">
+        <span class="eyebrow">SEU PEDIDO</span>
+        <h2>Carrinho de <em>compras</em></h2>
+        <p>Confira os itens e envie seu pedido pelo WhatsApp.</p>
+      </div>
+      <div class="order-layout">
+        <div class="cart-panel">
+          <div id="cartItems" class="cart-items"><p class="empty">Seu carrinho ainda está vazio.</p></div>
+          <div class="cart-total"><span>Total</span><strong id="cartTotal">R$ 0,00</strong></div>
+        </div>
+        <form id="orderForm" class="customer-panel">
+          <label for="customerName">Seu nome</label>
+          <input id="customerName" name="name" autocomplete="name" placeholder="Como podemos chamar você?" required>
+          <label for="customerPhone">Seu telefone (opcional)</label>
+          <input id="customerPhone" name="phone" type="tel" autocomplete="tel" placeholder="(21) 99999-9999">
+          <label for="whatsappTarget">Enviar pedido para</label>
+          <select id="whatsappTarget">
+            <option value="5521971065848">(21) 97106-5848</option>
+            <option value="5521997136150">(21) 99713-6150</option>
+          </select>
+          <label for="notes">Observações (opcional)</label>
+          <textarea id="notes" rows="3" placeholder="Alguma observação sobre seu pedido?"></textarea>
+          <p class="pickup-note">📍 Atendimento somente para retirada na barraca. Combine os detalhes pelo WhatsApp.</p>
+          <button class="btn btn-gold btn-full" type="submit">Enviar pedido pelo WhatsApp</button>
+          <p class="small-note">O WhatsApp abrirá com a mensagem pronta. Você precisará tocar em “Enviar” na conversa.</p>
+        </form>
+      </div>
+    </section>
+
+    <section class="pickup" id="retirada">
+      <div class="pickup-icon">✦</div>
+      <div>
+        <span class="eyebrow">COMO FUNCIONA</span>
+        <h2>Pedido feito, é só <em>retirar!</em></h2>
+        <p>No momento, trabalhamos somente com retirada na barraca. Fale com a gente pelo WhatsApp para combinar.</p>
+      </div>
+    </section>
+
+    <section class="section contact-section" id="contato">
+      <div class="section-heading">
+        <span class="eyebrow">FALE COM A GENTE</span>
+        <h2>Estamos à <em>disposição</em></h2>
+      </div>
+      <div class="contact-cards">
+        <a class="contact-card" href="https://wa.me/5521997136150" target="_blank" rel="noopener">
+          <span>WhatsApp</span><strong>(21) 99713-6150</strong><small>Toque para conversar</small>
+        </a>
+        <a class="contact-card" href="https://wa.me/5521971065848" target="_blank" rel="noopener">
+          <span>WhatsApp</span><strong>(21) 97106-5848</strong><small>Toque para conversar</small>
+        </a>
+        <a class="contact-card" href="https://instagram.com/empadasborges" target="_blank" rel="noopener">
+          <span>Instagram</span><strong>@empadasborges</strong><small>Acompanhe novidades</small>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <img src="assets/logo.png" alt="" class="footer-logo">
+    <p>EMPADAS <b>BORGES</b></p>
+    <small>Empadas • Pão de Queijo</small>
+    <small class="copyright">© <span id="year"></span> Empadas Borges. Todos os direitos reservados.</small>
+  </footer>
+
+  <button id="installBtn" class="install-btn" hidden>＋ Instalar aplicativo</button>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
