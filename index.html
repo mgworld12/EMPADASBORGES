@@ -15,7 +15,7 @@
   <title>Empadas Borges | Cardápio e pedidos</title>
   <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="icon" href="assets/favicon.png" sizes="64x64" type="image/png">
-  <link rel="apple-touch-icon" href="assets/icone-app-192.png">
+  <link rel="apple-touch-icon" href="assets/icone-pwa-192.png">
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -88,11 +88,11 @@
         <div class="bread-options">
           <div class="bread-option">
             <label for="breadUnits">Unidades avulsas</label>
-            <div class="inline-add"><input id="breadUnits" type="number" min="0" max="20" step="1" value="1" inputmode="numeric" aria-label="Quantidade de unidades avulsas"><button class="btn btn-gold" id="addBreadUnits" type="button">Adicionar unidades</button></div>
+            <div class="inline-add"><div class="stepper"><button class="qty-btn" type="button" data-step="-1" data-target="breadUnits" aria-label="Diminuir unidades avulsas">−</button><input id="breadUnits" type="number" min="0" max="20" step="1" value="1" inputmode="numeric" aria-label="Quantidade de unidades avulsas"><button class="qty-btn" type="button" data-step="1" data-target="breadUnits" aria-label="Aumentar unidades avulsas">+</button></div><button class="btn btn-gold" id="addBreadUnits" type="button">Adicionar unidades</button></div>
           </div>
           <div class="bread-option">
             <label for="breadPortion">Porção</label>
-            <div class="inline-add"><select id="breadPortion"><option value="5">5 unidades</option><option value="10">10 unidades</option><option value="15">15 unidades</option><option value="20">20 unidades</option></select><input id="breadPortionCount" type="number" min="0" max="20" step="1" value="1" inputmode="numeric" aria-label="Quantidade de porções"><button class="btn btn-gold" id="addBreadPortion" type="button">Adicionar porção</button></div>
+            <div class="inline-add"><select id="breadPortion"><option value="5">5 unidades</option><option value="10">10 unidades</option><option value="15">15 unidades</option><option value="20">20 unidades</option></select><div class="stepper"><button class="qty-btn" type="button" data-step="-1" data-target="breadPortionCount" aria-label="Diminuir porções">−</button><input id="breadPortionCount" type="number" min="0" max="20" step="1" value="1" inputmode="numeric" aria-label="Quantidade de porções"><button class="qty-btn" type="button" data-step="1" data-target="breadPortionCount" aria-label="Aumentar porções">+</button></div><button class="btn btn-gold" id="addBreadPortion" type="button">Adicionar porção</button></div>
             <small>O valor da porção é calculado pela quantidade de unidades.</small>
           </div>
         </div>
