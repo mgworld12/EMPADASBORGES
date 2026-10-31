@@ -13,7 +13,7 @@ const LOJA = {
 };
 // Os preços do site inteiro vêm daqui (não escreva preços no HTML).
 const EMPADAS = {
-  grande: {label:"Grande", price:4.50, salgados:["Frango","Frango com requeijão","Camarão","Camarão com requeijão","Queijo","Carne seca"], doces:["Leite condensado","Romeu e Julieta"]},
+  grande: {label:"Grande", price:4.00, salgados:["Frango","Frango com requeijão","Camarão","Camarão com requeijão","Queijo","Carne seca"], doces:["Leite condensado","Romeu e Julieta"]},
   pequena: {label:"Pequena", price:1.00, salgados:["Frango","Frango com requeijão","Camarão"], doces:["Leite condensado","Romeu e Julieta"]}
 };
 const PAO_PRECO = 0.75;
@@ -226,6 +226,12 @@ $("customerPhone").addEventListener("input",event=>{
   saveState();
 });
 $("customerName").addEventListener("input",saveState);
+// Botão que abre o minicalendário (a data também pode ser digitada).
+if("showPicker" in HTMLInputElement.prototype){
+  $("openDatePicker").hidden=false;
+  $("pickupDate").closest(".date-input-row").classList.add("has-btn");
+  $("openDatePicker").addEventListener("click",()=>{try{$("pickupDate").showPicker();}catch(e){$("pickupDate").focus();}});
+}
 $("floatingCart").addEventListener("click",()=>$("pedido").scrollIntoView({behavior:"smooth",block:"start"}));
 
 document.querySelectorAll("[data-category]").forEach(button=>button.addEventListener("click",()=>openCategory(button.dataset.category)));

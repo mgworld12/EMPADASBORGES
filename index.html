@@ -13,7 +13,8 @@
   <meta property="og:image" content="https://mgworld12.github.io/EMPADASBORGES/assets/logo.png">
   <meta name="twitter:card" content="summary">
   <title>Empadas Borges | Cardápio e pedidos</title>
-  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/favicon.png" sizes="64x64" type="image/png">
   <link rel="apple-touch-icon" href="assets/icone-192.png">
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="style.css">
@@ -69,7 +70,7 @@
           <button class="text-button" type="button" data-back>← Voltar</button>
         </div>
         <div class="size-choices" role="group" aria-label="Tamanho da empada">
-          <button class="size-choice active" type="button" data-size="grande" aria-pressed="true"><strong>Grande</strong><span data-price-size="grande">R$ 4,50</span></button>
+          <button class="size-choice active" type="button" data-size="grande" aria-pressed="true"><strong>Grande</strong><span data-price-size="grande">R$ 4,00</span></button>
           <button class="size-choice" type="button" data-size="pequena" aria-pressed="false"><strong>Pequena</strong><span data-price-size="pequena">R$ 1,00</span></button>
         </div>
         <p class="flavor-instruction">Agora escolha os sabores e as quantidades:</p>
@@ -117,7 +118,7 @@
           <input id="customerPhone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" maxlength="15" placeholder="(21) 99999-9999 ou (21) 9999-9999">
 
           <div class="datetime-fields">
-            <div><label for="pickupDate">Dia da retirada</label><input id="pickupDate" type="date" required></div>
+            <div><label for="pickupDate">Dia da retirada</label><div class="date-input-row"><input id="pickupDate" type="date" required><button id="openDatePicker" class="date-btn" type="button" aria-label="Abrir calendário" hidden>📅</button></div></div>
             <div><label for="pickupTime">Horário da retirada</label><input id="pickupTime" type="time" required></div>
           </div>
 
@@ -181,7 +182,7 @@
     </section>
   </main>
 
-  <footer><img src="assets/logo.png" alt="" class="footer-logo"><p>EMPADAS <b>BORGES</b></p><small>Empadas • Pão de Queijo</small><small class="copyright">© <span id="year"></span> Empadas Borges. Todos os direitos reservados.</small></footer>
+  <footer><img src="assets/logo-rodape.png" alt="" class="footer-logo"><p>EMPADAS <b>BORGES</b></p><small>Empadas • Pão de Queijo</small><small class="copyright">© <span id="year"></span> Empadas Borges. Todos os direitos reservados.</small></footer>
 
   <dialog id="confirmDialog" aria-labelledby="confirmTitle">
     <h3 id="confirmTitle">Confira seu pedido</h3>

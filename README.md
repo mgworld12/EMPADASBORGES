@@ -7,7 +7,7 @@ Projeto estático para publicação no GitHub Pages. A loja permite escolher Emp
 1. Abra o repositório `EMPADASBORGES` no GitHub.
 2. Substitua os arquivos da publicação pelos arquivos desta pasta, **mantendo a pasta `assets`** (inclusive os novos `icone-maskable-*.png`).
 3. Faça o commit das alterações.
-4. Aguarde alguns minutos e atualize o site. O aplicativo (PWA) agora busca a versão mais nova do site sempre que há internet; ao mudar arquivos de imagem, aumente o número em `CACHE` no `sw.js` (hoje `v10`).
+4. Aguarde alguns minutos e atualize o site. O aplicativo (PWA) agora busca a versão mais nova do site sempre que há internet; ao mudar arquivos de imagem, aumente o número em `CACHE` no `sw.js` (hoje `v11`).
 
 ## Antes de publicar
 
@@ -22,7 +22,7 @@ Projeto estático para publicação no GitHub Pages. A loja permite escolher Emp
 
 ## Regras do cardápio (valores atuais)
 
-- Empada grande: R$ 4,50 por unidade.
+- Empada grande: R$ 4,00 por unidade.
 - Empada pequena: R$ 1,00 por unidade.
 - Pão de queijo: R$ 0,75 por unidade.
 - Porções de pão de queijo: 5, 10, 15 ou 20 unidades; o preço é calculado pela quantidade.
