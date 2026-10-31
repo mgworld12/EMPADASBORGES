@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#080706">
   <meta name="description" content="Empadas Borges — empadas doces e salgadas e pão de queijo. Faça seu pedido para retirada.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:title" content="Empadas Borges | Cardápio e pedidos">
+  <meta property="og:description" content="Empadas doces e salgadas e pão de queijo. Monte seu pedido e envie pelo WhatsApp.">
+  <meta property="og:url" content="https://mgworld12.github.io/EMPADASBORGES/">
+  <meta property="og:image" content="https://mgworld12.github.io/EMPADASBORGES/assets/logo.png">
+  <meta name="twitter:card" content="summary">
   <title>Empadas Borges | Cardápio e pedidos</title>
   <link rel="icon" href="assets/favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="assets/icone-192.png">
@@ -17,7 +24,7 @@
       <img src="assets/logo.png" alt="Logomarca Empadas Borges">
       <span>EMPADAS <b>BORGES</b></span>
     </a>
-    <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">☰</button>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="mainNav">☰</button>
     <nav id="mainNav">
       <a href="#cardapio">Fazer pedido</a>
       <a href="#pedido">Meu pedido</a>
@@ -62,8 +69,8 @@
           <button class="text-button" type="button" data-back>← Voltar</button>
         </div>
         <div class="size-choices" role="group" aria-label="Tamanho da empada">
-          <button class="size-choice active" type="button" data-size="grande"><strong>Grande</strong><span>R$ 4,00</span></button>
-          <button class="size-choice" type="button" data-size="pequena"><strong>Pequeno</strong><span>R$ 1,00</span></button>
+          <button class="size-choice active" type="button" data-size="grande" aria-pressed="true"><strong>Grande</strong><span data-price-size="grande">R$ 4,50</span></button>
+          <button class="size-choice" type="button" data-size="pequena" aria-pressed="false"><strong>Pequena</strong><span data-price-size="pequena">R$ 1,00</span></button>
         </div>
         <p class="flavor-instruction">Agora escolha os sabores e as quantidades:</p>
         <div class="flavor-columns">
@@ -74,17 +81,17 @@
 
       <div id="paoPanel" class="catalog-panel" hidden>
         <div class="catalog-title">
-          <div><span class="eyebrow">ESCOLHA A QUANTIDADE</span><h3>Pão de queijo</h3><p class="unit-price"> 0,75 por unidade</p></div>
+          <div><span class="eyebrow">ESCOLHA A QUANTIDADE</span><h3>Pão de queijo</h3><p class="unit-price" id="breadUnitPrice">R$ 0,75 por unidade</p></div>
           <button class="text-button" type="button" data-back>← Voltar</button>
         </div>
         <div class="bread-options">
           <div class="bread-option">
             <label for="breadUnits">Unidades avulsas</label>
-            <div class="inline-add"><input id="breadUnits" type="number" min="0" max="20" step="1" value="0" aria-label="Quantidade de unidades avulsas"><button class="btn btn-gold" id="addBreadUnits" type="button">Adicionar unidades</button></div>
+            <div class="inline-add"><input id="breadUnits" type="number" min="1" max="20" step="1" value="1" inputmode="numeric" aria-label="Quantidade de unidades avulsas"><button class="btn btn-gold" id="addBreadUnits" type="button">Adicionar unidades</button></div>
           </div>
           <div class="bread-option">
             <label for="breadPortion">Porção</label>
-            <div class="inline-add"><select id="breadPortion"><option value="5">5 unidades</option><option value="10">10 unidades</option><option value="15">15 unidades</option><option value="20">20 unidades</option></select><input id="breadPortionCount" type="number" min="0" max="20" step="1" value="0" aria-label="Quantidade de porções"><button class="btn btn-gold" id="addBreadPortion" type="button">Adicionar porção</button></div>
+            <div class="inline-add"><select id="breadPortion"><option value="5">5 unidades</option><option value="10">10 unidades</option><option value="15">15 unidades</option><option value="20">20 unidades</option></select><input id="breadPortionCount" type="number" min="1" max="20" step="1" value="1" inputmode="numeric" aria-label="Quantidade de porções"><button class="btn btn-gold" id="addBreadPortion" type="button">Adicionar porção</button></div>
             <small>O valor da porção é calculado pela quantidade de unidades.</small>
           </div>
         </div>
@@ -100,9 +107,10 @@
       <div class="order-layout">
         <div class="cart-panel">
           <div id="cartItems" class="cart-items"><p class="empty">Seu carrinho ainda está vazio.</p></div>
-          <div class="cart-total"><span>Total</span><strong id="cartTotal"> 0,00</strong></div>
+          <div class="cart-total"><span>Total</span><strong id="cartTotal">R$ 0,00</strong></div>
+          <button id="clearCart" class="text-button clear-cart" type="button" hidden>Limpar pedido</button>
         </div>
-        <form id="orderForm" class="customer-panel">
+        <form id="orderForm" class="customer-panel" novalidate>
           <label for="customerName">Seu nome</label>
           <input id="customerName" name="name" autocomplete="name" placeholder="Como podemos chamar você?" required>
           <label for="customerPhone">Seu telefone (opcional)</label>
@@ -110,26 +118,38 @@
 
           <div class="datetime-fields">
             <div><label for="pickupDate">Dia da retirada</label><input id="pickupDate" type="date" required></div>
-            <div class="time-picker-wrap"><label for="pickupTime">Horário da retirada</label><div class="time-input-row"><input id="pickupTime" type="text" inputmode="numeric" maxlength="5" placeholder="HH:MM" required><button id="openTimePicker" class="text-button" type="button" aria-label="Escolher horário">▾</button></div><div id="timePicker" class="time-picker" hidden><div><label for="pickupHour">Hora</label><select id="pickupHour"></select></div><div><label for="pickupMinute">Minutos</label><select id="pickupMinute"></select></div><button id="applyTime" class="btn btn-gold" type="button">Confirmar horário</button></div></div>
+            <div><label for="pickupTime">Horário da retirada</label><input id="pickupTime" type="time" required></div>
           </div>
 
-          <label for="paymentAtPickup">Pagamento</label>
-          <select id="paymentAtPickup"><option value="Sim, pagamento na retirada">Pagamento na retirada</option><option value="Não, vou combinar pelo WhatsApp">Vou combinar pelo WhatsApp</option></select>
+          <label for="paymentMethod">Forma de pagamento</label>
+          <select id="paymentMethod">
+            <option value="Pix na retirada">Pix na retirada</option>
+            <option value="Dinheiro na retirada">Dinheiro na retirada</option>
+            <option value="Cartão na retirada">Cartão na retirada</option>
+            <option value="Combinar pelo WhatsApp">Combinar pelo WhatsApp</option>
+          </select>
 
-          <label class="check-line"><input id="needsChange" type="checkbox"> Preciso de troco (pagamento em dinheiro)</label>
-          <div id="changeAmountWrap" hidden><label for="changeAmount">Troco para quanto?</label><input id="changeAmount" inputmode="decimal" placeholder="Ex.: 50,00"></div>
+          <div id="changeBlock" hidden>
+            <label class="check-line"><input id="needsChange" type="checkbox"> Preciso de troco</label>
+            <div id="changeAmountWrap" hidden><label for="changeAmount">Troco para quanto?</label><input id="changeAmount" inputmode="decimal" placeholder="Ex.: 50,00"></div>
+          </div>
 
           <label for="notes">Observações (opcional)</label>
           <textarea id="notes" rows="3" placeholder="Alguma observação sobre seu pedido?"></textarea>
           <p class="pickup-note">📍 Atendimento somente para retirada na barraca.</p>
-          <button class="btn btn-gold btn-full" type="submit">Enviar pedido pelo WhatsApp</button>
+          <button class="btn btn-gold btn-full" type="submit">Revisar e enviar pelo WhatsApp</button>
         </form>
       </div>
     </section>
 
     <section class="pickup" id="retirada">
       <div class="pickup-icon">✦</div>
-      <div><span class="eyebrow">COMO FUNCIONA</span><h2>Pedido feito, é só <em>retirar!</em></h2><p>No momento, trabalhamos somente com retirada na barraca. Informe o dia e horário desejados no pedido.</p></div>
+      <div>
+        <span class="eyebrow">COMO FUNCIONA</span>
+        <h2>Pedido feito, é só <em>retirar!</em></h2>
+        <p>No momento, trabalhamos somente com retirada na barraca. Informe o dia e horário desejados no pedido.</p>
+        <p class="store-info" id="storeInfo" hidden></p>
+      </div>
     </section>
 
     <section class="section contact-section" id="contato">
@@ -151,18 +171,30 @@
         </a>
         <div class="contact-card pix-card">
           <span class="contact-icon pix-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" role="img"><path d="M17 5h4l7 7-7 7h-4l-7-7 7-7Zm14 14h4l7 7-7 7h-4l-7-7 7-7ZM17 29h4l7 7-7 7h-4l-7-7 7-7ZM3 19h4l7 7-7 7H3l-7-7 7-7Z" fill="currentColor" transform="translate(7 0)"/></svg>
+            <svg viewBox="0 0 48 48" role="img"><path fill="currentColor" d="M24 3l8 8-8 8-8-8zM37 16l8 8-8 8-8-8zM24 29l8 8-8 8-8-8zM11 16l8 8-8 8-8-8z"/></svg>
           </span>
           <strong>Chave PIX</strong>
-          <small>(21) 97106-5848</small>
+          <small>Celular · (21) 97106-5848</small>
+          <button class="btn btn-gold copy-pix" id="copyPix" type="button">Copiar chave</button>
         </div>
       </div>
     </section>
   </main>
 
   <footer><img src="assets/logo.png" alt="" class="footer-logo"><p>EMPADAS <b>BORGES</b></p><small>Empadas • Pão de Queijo</small><small class="copyright">© <span id="year"></span> Empadas Borges. Todos os direitos reservados.</small></footer>
-  <button id="floatingCart" class="floating-cart" type="button" aria-label="Abrir cestinha e ver total"><span>🧺</span><span id="floatingCartTotal"> 0,00</span><small id="floatingCartCount">0 itens</small></button>
-  <button id="installBtn" class="install-btn" hidden>＋ Instalar aplicativo</button>
+
+  <dialog id="confirmDialog" aria-labelledby="confirmTitle">
+    <h3 id="confirmTitle">Confira seu pedido</h3>
+    <pre id="confirmText"></pre>
+    <p class="small-note">Ao continuar, o WhatsApp abrirá com a mensagem pronta. Lembre-se de tocar em enviar lá.</p>
+    <div class="dialog-actions">
+      <button class="text-button" id="confirmBack" type="button">Voltar</button>
+      <button class="btn btn-gold" id="confirmSend" type="button">Abrir WhatsApp</button>
+    </div>
+  </dialog>
+
+  <button id="floatingCart" class="floating-cart" type="button" aria-label="Abrir cestinha e ver total"><span>🧺</span><span id="floatingCartTotal">R$ 0,00</span><small id="floatingCartCount">0 itens</small></button>
+  <button id="installBtn" class="install-btn" type="button" hidden>＋ Instalar aplicativo</button>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="script.js"></script>
 </body>
