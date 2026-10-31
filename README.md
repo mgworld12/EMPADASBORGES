@@ -7,7 +7,7 @@ Projeto estático para publicação no GitHub Pages. A loja permite escolher Emp
 1. Abra o repositório `EMPADASBORGES` no GitHub.
 2. Substitua os arquivos da publicação pelos arquivos desta pasta, **mantendo a pasta `assets`** (inclusive os novos `icone-app-*.png`).
 3. Faça o commit das alterações.
-4. Aguarde alguns minutos e atualize o site. O aplicativo (PWA) agora busca a versão mais nova do site sempre que há internet; ao mudar arquivos de imagem, aumente o número em `CACHE` no `sw.js` (hoje `v12`).
+4. Aguarde alguns minutos e atualize o site. O aplicativo (PWA) agora busca a versão mais nova do site sempre que há internet; ao mudar arquivos de imagem, aumente o número em `CACHE` no `sw.js` (hoje `v13`).
 
 ## Antes de publicar
 
