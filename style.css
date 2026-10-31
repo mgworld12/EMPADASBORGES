@@ -113,3 +113,26 @@ input[type="date"]{padding-right:42px;color-scheme:dark}
 input[type="date"]::-webkit-calendar-picker-indicator{opacity:1;filter:invert(1) brightness(1.8);cursor:pointer;width:20px;height:20px;margin-right:1px}
 input[type="date"]::-moz-calendar-picker-indicator{filter:invert(1) brightness(1.8);cursor:pointer}
 .time-input-row{width:100%}
+
+
+/* Organização e centralização do quadro de pedido */
+.order-layout{max-width:900px;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
+.cart-panel,.customer-panel{padding:18px;min-width:0}
+.customer-panel{width:100%;box-sizing:border-box}
+.customer-panel>label{display:block;margin-top:10px}
+.customer-panel>input,.customer-panel>select,.customer-panel>textarea,
+.customer-panel .datetime-fields input{box-sizing:border-box;min-width:0;width:100%;min-height:42px}
+.customer-panel textarea{min-height:96px}
+.datetime-fields{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:10px}
+.datetime-fields>div{min-width:0;gap:7px}
+.time-input-row #openTimePicker{width:27px;right:3px;background:#090806;color:#fff;border-left:1px solid #55452e;border-radius:0 5px 5px 0}
+.time-input-row #openTimePicker:hover{background:#17120b;color:#fff}
+@media(max-width:800px){
+  .order-layout{max-width:560px;grid-template-columns:minmax(0,1fr);gap:14px;padding-left:12px;padding-right:12px}
+  .cart-panel,.customer-panel{padding:15px}
+  .datetime-fields{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:10px}
+}
+@media(max-width:360px){
+  .datetime-fields{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:8px}
+  .cart-panel,.customer-panel{padding:13px}
+}
