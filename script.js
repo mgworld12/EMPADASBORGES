@@ -243,15 +243,16 @@ document.querySelectorAll("[data-back]").forEach(button=>button.addEventListener
 }));
 document.querySelectorAll(".size-choice").forEach(button=>button.addEventListener("click",()=>{selectedSize=button.dataset.size;renderFlavors();}));
 document.querySelectorAll(".flavor-columns").forEach(container=>container.addEventListener("click",event=>{
-  const step=event.target.closest("[data-step]");
-  if(step){
-    const input=$(step.dataset.target);
-    input.value=Math.min(MAX_ADD,Math.max(0,(Number(input.value)||0)+Number(step.dataset.step)));
-    return;
-  }
   const button=event.target.closest("[data-empada]");
   if(button)addEmpada(button);
 }));
+// Botões − / + de quantidade (empadas e pão de queijo), de 0 a 20.
+document.querySelector("#cardapio").addEventListener("click",event=>{
+  const step=event.target.closest("[data-step]");
+  if(!step)return;
+  const input=$(step.dataset.target);
+  input.value=Math.min(MAX_ADD,Math.max(0,(Number(input.value)||0)+Number(step.dataset.step)));
+});
 $("addBreadUnits").addEventListener("click",()=>{
   const qty=Number($("breadUnits").value);
   if(addItem({id:"pao-unidades",name:"Pão de queijo — unidades avulsas",group:"Pão de queijo",price:PAO_PRECO},qty))$("breadUnits").value=1;
@@ -294,4 +295,9 @@ let installPrompt;
 window.addEventListener("beforeinstallprompt",event=>{event.preventDefault();installPrompt=event;$("installBtn").hidden=false;});
 $("installBtn").addEventListener("click",async()=>{if(!installPrompt){showToast("Use o menu do navegador e escolha Instalar aplicativo ou Adicionar à tela inicial.");return;}installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;$("installBtn").hidden=true;});
 window.addEventListener("appinstalled",()=>{$("installBtn").hidden=true;showToast("Empadas Borges instalada!");});
+// Quando uma versão nova do site assume, recarrega uma vez para não misturar arquivos antigos e novos.
+if("serviceWorker" in navigator&&navigator.serviceWorker.controller){
+  let reloaded=false;
+  navigator.serviceWorker.addEventListener("controllerchange",()=>{if(reloaded)return;reloaded=true;location.reload();});
+}
 if("serviceWorker" in navigator&&location.protocol!=="file:")window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(error=>console.error("Falha ao registrar PWA:",error)));
