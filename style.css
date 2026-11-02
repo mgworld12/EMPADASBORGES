@@ -156,3 +156,6 @@ input[type="time"]{color-scheme:dark}
 .date-btn:focus-visible{outline:2px solid var(--gold-light);outline-offset:1px}
 
 .inline-add .stepper{justify-self:start}
+
+.pickup-hint{margin:2px 0 4px;font-size:13px;color:var(--gold-light);line-height:1.4}
+.lead-info{margin-top:10px}

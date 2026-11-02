@@ -1,4 +1,4 @@
-const CACHE="empadas-borges-v16";
+const CACHE="empadas-borges-v17";
 const FILES=["./","./index.html","./style.css","./script.js","./manifest.json","./assets/logo.png","./assets/favicon.png","./assets/favicon-32.png","./assets/logo-rodape.png","./assets/logo-cabecalho.png","./assets/icone-pwa-192.png","./assets/icone-pwa-512.png","./assets/icone-pwa-maskable-192.png","./assets/icone-pwa-maskable-512.png"];
 self.addEventListener("install",event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES.map(u=>new Request(u,{cache:"reload"})))).then(()=>self.skipWaiting())));
 self.addEventListener("activate",event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));

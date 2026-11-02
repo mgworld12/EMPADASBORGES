@@ -17,6 +17,8 @@ const EMPADAS = {
   pequena: {label:"Pequena", price:1.00, salgados:["Frango","Frango com requeijão","Camarão"], doces:["Leite condensado","Romeu e Julieta"]}
 };
 const PAO_PRECO = 0.75;
+// Antecedência mínima para retirada, em horas (24 = 1 dia). Vale a regra mais exigente entre os itens do pedido.
+const ANTECEDENCIA_HORAS = { empadas: 24, pao: 1 };
 /* ===================================== */
 
 const MAX_ADD = 20, MAX_ITEM = 99;
@@ -31,9 +33,9 @@ const money = value => value.toLocaleString("pt-BR", {style:"currency",currency:
 const esc = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const cartTotal = () => cart.reduce((sum,i)=>sum+i.price*i.qty,0);
 
-function showToast(message){
+function showToast(message,ms=2800){
   const toast=$("toast"); toast.textContent=message; toast.classList.add("show");
-  clearTimeout(showToast.timer); showToast.timer=setTimeout(()=>toast.classList.remove("show"),2800);
+  clearTimeout(showToast.timer); showToast.timer=setTimeout(()=>toast.classList.remove("show"),ms);
 }
 
 /* ---------- Persistência (carrinho, nome e telefone) ---------- */
@@ -59,6 +61,9 @@ function fillPrices(){
 }
 
 /* ---------- Informações da barraca ---------- */
+function renderLeadInfo(){
+  $("leadInfo").textContent=`Empadas: peça com ${hoursText(ANTECEDENCIA_HORAS.empadas)} de antecedência. Pão de queijo: ${hoursText(ANTECEDENCIA_HORAS.pao)} de antecedência.`;
+}
 function renderStoreInfo(){
   const box=$("storeInfo"), lines=[];
   if(LOJA.endereco)lines.push("📍 "+LOJA.endereco);
@@ -123,7 +128,43 @@ function renderCart(){
   const count=cart.reduce((sum,i)=>sum+i.qty,0);
   $("floatingCartCount").textContent=`${count} ${count===1?"item":"itens"}`;
   $("clearCart").hidden=!cart.length;
+  updatePickupHint();
   saveState();
+}
+
+/* ---------- Antecedência mínima ---------- */
+const pad=n=>String(n).padStart(2,"0");
+const fmtDate=d=>`${pad(d.getDate())}/${pad(d.getMonth()+1)}`;
+const fmtTime=d=>`${pad(d.getHours())}:${pad(d.getMinutes())}`;
+const isoDate=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+function hoursText(h){
+  if(h>=24&&h%24===0){const n=h/24;return n===1?"1 dia":`${n} dias`;}
+  return h===1?"1 hora":`${h} horas`;
+}
+function leadHours(){
+  let h=0;
+  if(cart.some(i=>i.id.startsWith("empada-")))h=Math.max(h,ANTECEDENCIA_HORAS.empadas);
+  if(cart.some(i=>i.id.startsWith("pao-")))h=Math.max(h,ANTECEDENCIA_HORAS.pao);
+  return h;
+}
+function earliestPickup(){
+  const d=new Date(Date.now()+leadHours()*3600000);
+  d.setSeconds(0,0); if(Date.now()+leadHours()*3600000>d.getTime())d.setMinutes(d.getMinutes()+1);
+  return d;
+}
+function leadReason(){
+  const e=cart.some(i=>i.id.startsWith("empada-")), p=cart.some(i=>i.id.startsWith("pao-"));
+  if(e&&p&&ANTECEDENCIA_HORAS.empadas>=ANTECEDENCIA_HORAS.pao)return `empadas pedem ${hoursText(ANTECEDENCIA_HORAS.empadas)} de antecedência`;
+  if(e)return `empadas pedem ${hoursText(ANTECEDENCIA_HORAS.empadas)} de antecedência`;
+  return `pão de queijo pede ${hoursText(ANTECEDENCIA_HORAS.pao)} de antecedência`;
+}
+function updatePickupHint(){
+  const hint=$("pickupHint"), lead=leadHours(), e=earliestPickup();
+  $("pickupDate").min=isoDate(lead?e:new Date());
+  if($("pickupDate").value&&$("pickupDate").value<$("pickupDate").min)$("pickupDate").value=$("pickupDate").min;
+  if(!lead){hint.hidden=true;return;}
+  hint.textContent=`🕒 Retirada a partir de ${fmtDate(e)} às ${fmtTime(e)} (${leadReason()}).`;
+  hint.hidden=false;
 }
 
 /* ---------- Data e horário de retirada ---------- */
@@ -133,6 +174,7 @@ function setPickupDefaults(){
   const today=local.toISOString().slice(0,10);
   $("pickupDate").value=today;
   $("pickupDate").min=today;
+  updatePickupHint();
   $("pickupTime").value="";            // o cliente escolhe o horário
   if(LOJA.abre)$("pickupTime").min=LOJA.abre;
   if(LOJA.fecha)$("pickupTime").max=LOJA.fecha;
@@ -162,6 +204,8 @@ function buildMessage(){
   if(!dateVal||!timeVal){showToast("Informe o dia e o horário da retirada.");(dateVal?$("pickupTime"):$("pickupDate")).focus();return null;}
   const when=new Date(`${dateVal}T${timeVal}`);
   if(isNaN(when)||when<=new Date()){showToast("Escolha um dia e horário de retirada que ainda não passou.");$("pickupTime").focus();return null;}
+  const earliest=earliestPickup();
+  if(when<earliest){showToast(`Retirada a partir de ${fmtDate(earliest)} às ${fmtTime(earliest)}: ${leadReason()}.`,4500);$("pickupTime").focus();return null;}
   if((LOJA.abre&&timeVal<LOJA.abre)||(LOJA.fecha&&timeVal>LOJA.fecha)){
     showToast(`Retiradas somente entre ${LOJA.abre||"00:00"} e ${LOJA.fecha||"23:59"}.`);$("pickupTime").focus();return null;
   }
@@ -288,12 +332,17 @@ document.addEventListener("keydown",event=>{if(event.key==="Escape"&&$("mainNav"
 
 /* ---------- Início ---------- */
 $("year").textContent=new Date().getFullYear();
-fillPrices();renderStoreInfo();setPickupDefaults();updatePaymentUI();
+fillPrices();renderLeadInfo();renderStoreInfo();setPickupDefaults();updatePaymentUI();
 loadState();renderCart();
 
 let installPrompt;
 window.addEventListener("beforeinstallprompt",event=>{event.preventDefault();installPrompt=event;$("installBtn").hidden=false;});
-$("installBtn").addEventListener("click",async()=>{if(!installPrompt){showToast("Use o menu do navegador e escolha Instalar aplicativo ou Adicionar à tela inicial.");return;}installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;$("installBtn").hidden=true;});
+const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+const isStandalone=navigator.standalone===true||(window.matchMedia&&matchMedia("(display-mode: standalone)").matches);
+if(isIOS&&!isStandalone)$("installBtn").hidden=false;   // o iPhone não oferece o botão automático
+$("installBtn").addEventListener("click",async()=>{
+  if(isIOS&&!installPrompt){showToast("No iPhone: toque em Compartilhar (quadrado com seta) e depois em Adicionar à Tela de Início.",6500);return;}
+  if(!installPrompt){showToast("Use o menu do navegador e escolha Instalar aplicativo ou Adicionar à tela inicial.");return;}installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;$("installBtn").hidden=true;});
 window.addEventListener("appinstalled",()=>{$("installBtn").hidden=true;showToast("Empadas Borges instalada!");});
 // Quando uma versão nova do site assume, recarrega uma vez para não misturar arquivos antigos e novos.
 if("serviceWorker" in navigator&&navigator.serviceWorker.controller){

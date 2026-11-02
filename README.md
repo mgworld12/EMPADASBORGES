@@ -7,7 +7,7 @@ Projeto estático para publicação no GitHub Pages. A loja permite escolher Emp
 1. Abra o repositório `EMPADASBORGES` no GitHub.
 2. Substitua os arquivos da publicação pelos arquivos desta pasta, **mantendo a pasta `assets`** (inclusive os novos `icone-pwa-*.png`).
 3. Faça o commit das alterações.
-4. Aguarde alguns minutos e atualize o site. O aplicativo (PWA) agora busca a versão mais nova do site sempre que há internet; ao mudar arquivos de imagem, aumente o número em `CACHE` no `sw.js` (hoje `v16`).
+4. Aguarde alguns minutos e atualize o site. O aplicativo (PWA) agora busca a versão mais nova do site sempre que há internet; ao mudar arquivos de imagem, aumente o número em `CACHE` no `sw.js` (hoje `v17`).
 
 ## Antes de publicar
 
@@ -29,12 +29,13 @@ Projeto estático para publicação no GitHub Pages. A loja permite escolher Emp
 
 ## Versão dos arquivos
 
-Sempre que mudar `style.css` ou `script.js`, aumente também o número em `?v=` no `index.html` e o `CACHE` no `sw.js`, para os celulares não ficarem com arquivos antigos misturados com os novos (hoje `16`).
+Sempre que mudar `style.css` ou `script.js`, aumente também o número em `?v=` no `index.html` e o `CACHE` no `sw.js`, para os celulares não ficarem com arquivos antigos misturados com os novos (hoje `17`).
 
 ## Comportamento do pedido
 
 - O carrinho, o nome e o telefone ficam salvos no navegador (o carrinho expira em 12 horas) e podem ser limpos pelo botão "Limpar pedido".
-- O horário de retirada precisa estar no futuro; o horário não vem preenchido.
+- O horário de retirada precisa respeitar a antecedência mínima: **empadas 1 dia (24 h)** e **pão de queijo 1 hora**. Se o pedido tiver os dois, vale a regra das empadas. Os valores ficam em `ANTECEDENCIA_HORAS`, no início do `script.js`.
+- O horário não vem preenchido; o site mostra a partir de quando a retirada é possível.
 - Pagamento: Pix, dinheiro, cartão (na retirada) ou combinar pelo WhatsApp. A pergunta de troco só aparece para dinheiro e o valor precisa cobrir o total.
 - Antes de abrir o WhatsApp, o cliente vê um resumo para conferir.
 
