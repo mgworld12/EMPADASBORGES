@@ -17,8 +17,11 @@ const EMPADAS = {
   pequena: {label:"Pequena", price:1.00, salgados:["Frango","Frango com requeijão","Camarão"], doces:["Leite condensado","Romeu e Julieta"]}
 };
 const PAO_PRECO = 0.75;
-// Antecedência mínima para retirada, em horas (24 = 1 dia). Vale a regra mais exigente entre os itens do pedido.
-const ANTECEDENCIA_HORAS = { empadas: 24, pao: 1 };
+// Empadas: pedido feito até o horário limite vale para retirada no dia seguinte; depois do limite, só a partir do outro dia.
+// Se o pedido tiver empadas, essa regra prevalece sobre a do pão de queijo.
+const PEDIDO_EMPADAS = { dias: 1, limite: "20:00" };
+// Pão de queijo (sozinho): antecedência mínima em horas.
+const ANTECEDENCIA_PAO_HORAS = 1;
 /* ===================================== */
 
 const MAX_ADD = 20, MAX_ITEM = 99;
@@ -62,7 +65,7 @@ function fillPrices(){
 
 /* ---------- Informações da barraca ---------- */
 function renderLeadInfo(){
-  $("leadInfo").textContent=`Empadas: peça com ${hoursText(ANTECEDENCIA_HORAS.empadas)} de antecedência. Pão de queijo: ${hoursText(ANTECEDENCIA_HORAS.pao)} de antecedência.`;
+  $("leadInfo").textContent=`Empadas: faça o pedido até as ${limiteTexto()} para retirar no dia seguinte (depois das ${limiteTexto()}, a retirada é a partir do outro dia). Pão de queijo: ${ANTECEDENCIA_PAO_HORAS===1?"1 hora":ANTECEDENCIA_PAO_HORAS+" horas"} de antecedência. Se o pedido tiver os dois, vale a regra das empadas.`;
 }
 function renderStoreInfo(){
   const box=$("storeInfo"), lines=[];
@@ -132,38 +135,40 @@ function renderCart(){
   saveState();
 }
 
-/* ---------- Antecedência mínima ---------- */
+/* ---------- Antecedência e horário limite do pedido ---------- */
 const pad=n=>String(n).padStart(2,"0");
 const fmtDate=d=>`${pad(d.getDate())}/${pad(d.getMonth()+1)}`;
 const fmtTime=d=>`${pad(d.getHours())}:${pad(d.getMinutes())}`;
 const isoDate=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-function hoursText(h){
-  if(h>=24&&h%24===0){const n=h/24;return n===1?"1 dia":`${n} dias`;}
-  return h===1?"1 hora":`${h} horas`;
+const hasEmpada=()=>cart.some(i=>i.id.startsWith("empada-"));
+const hasPao=()=>cart.some(i=>i.id.startsWith("pao-"));
+function limiteTexto(){const [h,m]=PEDIDO_EMPADAS.limite.split(":").map(Number);return m?`${h}h${pad(m)}`:`${h}h`;}
+function afterCutoff(now=new Date()){
+  const [h,m]=PEDIDO_EMPADAS.limite.split(":").map(Number);
+  return now.getHours()*60+now.getMinutes()>h*60+m;
 }
-function leadHours(){
-  let h=0;
-  if(cart.some(i=>i.id.startsWith("empada-")))h=Math.max(h,ANTECEDENCIA_HORAS.empadas);
-  if(cart.some(i=>i.id.startsWith("pao-")))h=Math.max(h,ANTECEDENCIA_HORAS.pao);
-  return h;
-}
+// Primeiro momento em que a retirada é permitida. Havendo empadas, a regra delas prevalece.
 function earliestPickup(){
-  const d=new Date(Date.now()+leadHours()*3600000);
-  d.setSeconds(0,0); if(Date.now()+leadHours()*3600000>d.getTime())d.setMinutes(d.getMinutes()+1);
-  return d;
+  const now=new Date();
+  if(hasEmpada())return new Date(now.getFullYear(),now.getMonth(),now.getDate()+PEDIDO_EMPADAS.dias+(afterCutoff(now)?1:0),0,0,0,0);
+  if(hasPao())return new Date(Math.ceil((now.getTime()+ANTECEDENCIA_PAO_HORAS*3600000)/60000)*60000);
+  return now;
 }
 function leadReason(){
-  const e=cart.some(i=>i.id.startsWith("empada-")), p=cart.some(i=>i.id.startsWith("pao-"));
-  if(e&&p&&ANTECEDENCIA_HORAS.empadas>=ANTECEDENCIA_HORAS.pao)return `empadas pedem ${hoursText(ANTECEDENCIA_HORAS.empadas)} de antecedência`;
-  if(e)return `empadas pedem ${hoursText(ANTECEDENCIA_HORAS.empadas)} de antecedência`;
-  return `pão de queijo pede ${hoursText(ANTECEDENCIA_HORAS.pao)} de antecedência`;
+  if(hasEmpada()){
+    return afterCutoff()
+      ? `pedidos de empadas feitos depois das ${limiteTexto()} só podem ser retirados a partir do outro dia`
+      : `pedidos de empadas até as ${limiteTexto()} são para retirada no dia seguinte`;
+  }
+  return `pão de queijo pede ${ANTECEDENCIA_PAO_HORAS===1?"1 hora":ANTECEDENCIA_PAO_HORAS+" horas"} de antecedência`;
 }
+function earliestText(e){return hasEmpada()?`a partir de ${fmtDate(e)}`:`a partir de ${fmtDate(e)} às ${fmtTime(e)}`;}
 function updatePickupHint(){
-  const hint=$("pickupHint"), lead=leadHours(), e=earliestPickup();
-  $("pickupDate").min=isoDate(lead?e:new Date());
+  const hint=$("pickupHint"), e=earliestPickup(), has=hasEmpada()||hasPao();
+  $("pickupDate").min=isoDate(has?e:new Date());
   if($("pickupDate").value&&$("pickupDate").value<$("pickupDate").min)$("pickupDate").value=$("pickupDate").min;
-  if(!lead){hint.hidden=true;return;}
-  hint.textContent=`🕒 Retirada a partir de ${fmtDate(e)} às ${fmtTime(e)} (${leadReason()}).`;
+  if(!has){hint.hidden=true;return;}
+  hint.textContent=`🕒 Retirada ${earliestText(e)} (${leadReason()}).`;
   hint.hidden=false;
 }
 
@@ -205,7 +210,7 @@ function buildMessage(){
   const when=new Date(`${dateVal}T${timeVal}`);
   if(isNaN(when)||when<=new Date()){showToast("Escolha um dia e horário de retirada que ainda não passou.");$("pickupTime").focus();return null;}
   const earliest=earliestPickup();
-  if(when<earliest){showToast(`Retirada a partir de ${fmtDate(earliest)} às ${fmtTime(earliest)}: ${leadReason()}.`,4500);$("pickupTime").focus();return null;}
+  if(when<earliest){showToast(`Retirada ${earliestText(earliest)}: ${leadReason()}.`,5500);$("pickupDate").focus();return null;}
   if((LOJA.abre&&timeVal<LOJA.abre)||(LOJA.fecha&&timeVal>LOJA.fecha)){
     showToast(`Retiradas somente entre ${LOJA.abre||"00:00"} e ${LOJA.fecha||"23:59"}.`);$("pickupTime").focus();return null;
   }
@@ -333,7 +338,7 @@ document.addEventListener("keydown",event=>{if(event.key==="Escape"&&$("mainNav"
 /* ---------- Início ---------- */
 $("year").textContent=new Date().getFullYear();
 fillPrices();renderLeadInfo();renderStoreInfo();setPickupDefaults();updatePaymentUI();
-loadState();renderCart();
+loadState();renderCart();setInterval(updatePickupHint,60000);
 
 let installPrompt;
 window.addEventListener("beforeinstallprompt",event=>{event.preventDefault();installPrompt=event;$("installBtn").hidden=false;});
